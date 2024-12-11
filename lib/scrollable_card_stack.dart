@@ -1,123 +1,243 @@
-import 'dart:math';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-class ScrollableCardStack extends StatefulWidget {
-  final int itemCount;
-  final Widget Function(BuildContext, int) itemBuilder;
 
-  const ScrollableCardStack({
+class PerspectiveListView extends StatefulWidget {
+  const PerspectiveListView({
     super.key,
-    required this.itemCount,
-    required this.itemBuilder,
+    required this.visualizedItems,
+    required this.itemExtent,
+    required this.children,
+    this.initialIndex = 0,
+    this.padding = EdgeInsets.zero,
+    this.onTapFrontItem,
+    this.onChangeFrontItem,
+    this.backItemsShadowColor = Colors.transparent,
+    this.enableBackItemsShadow = false,
   });
 
+  final List<Widget> children;
+  final double? itemExtent;
+  final int? visualizedItems;
+  final int initialIndex;
+  final EdgeInsetsGeometry padding;
+  final ValueChanged<int?>? onTapFrontItem;
+  final ValueChanged<int>? onChangeFrontItem;
+  final Color backItemsShadowColor;
+  final bool enableBackItemsShadow;
+
   @override
-  State<ScrollableCardStack> createState() => _ScrollableCardStackState();
+  PerspectiveListViewState createState() => PerspectiveListViewState();
 }
 
-class _ScrollableCardStackState extends State<ScrollableCardStack>
-    with SingleTickerProviderStateMixin {
-  late PageController _pageController;
-  double _currentPage = 0;
+class PerspectiveListViewState extends State<PerspectiveListView> {
+  PageController? _pageController;
+  int? _currentIndex;
+  double? _pagePercent;
 
   @override
   void initState() {
+    _currentIndex = widget.initialIndex;
+    _pageController = PageController(
+      viewportFraction: 1 / widget.visualizedItems!,
+      initialPage: _currentIndex!,
+    );
+    _pagePercent = 0.0;
+    _pageController!.addListener(_pageListener);
     super.initState();
-    _pageController = PageController(initialPage: 0);
-    _pageController.addListener(_onScroll);
   }
 
   @override
   void dispose() {
-    _pageController.removeListener(_onScroll);
-    _pageController.dispose();
+    _pageController!
+      ..removeListener(_pageListener)
+      ..dispose();
     super.dispose();
   }
 
-  void _onScroll() => setState(() => _currentPage = _pageController.page ?? 0);
-
-  void _onHorizontalDragEnd(DragEndDetails details) {
-    if (details.primaryVelocity! > 0 && _currentPage > 0) {
-      _pageController.previousPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOut,
-      );
-    } else if (details.primaryVelocity! < 0 &&
-        _currentPage < widget.itemCount - 1) {
-      _pageController.nextPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOut,
-      );
-    }
+  void _pageListener() {
+    _currentIndex = _pageController!.page!.floor();
+    _pagePercent = (_pageController!.page! - _currentIndex!).abs();
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
+        final height = constraints.maxHeight;
         return Stack(
-          clipBehavior: Clip.none,
           children: [
-            for (int i = widget.itemCount - 1; i >= 0; i--)
-              _buildStackedCard(i, constraints),
-            Positioned.fill(
-              child: GestureDetector(
-                onHorizontalDragEnd: _onHorizontalDragEnd,
-                child: PageView.builder(
-                  scrollDirection: Axis.vertical,
-                  controller: _pageController,
-                  itemCount: widget.itemCount,
-                  physics: const BouncingScrollPhysics(),
-                  itemBuilder: (context, index) => const SizedBox.shrink(),
-                ),
+            //---------------------------------------
+            // Perspective Items List
+            //---------------------------------------
+            Padding(
+              padding: widget.padding,
+              child: _PerspectiveItems(
+                generatedItems: widget.visualizedItems! - 1,
+                currentIndex: _currentIndex,
+                heightItem: widget.itemExtent,
+                pagePercent: _pagePercent,
+                children: widget.children,
               ),
             ),
+            //---------------------------------------
+            // Back Items Shadow
+            //---------------------------------------
+            if (widget.enableBackItemsShadow)
+              Positioned.fill(
+                bottom: widget.itemExtent,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        widget.backItemsShadowColor.withOpacity(.8),
+                        widget.backItemsShadowColor.withOpacity(0),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            //---------------------------------------
+            // Void Page View
+            //---------------------------------------
+            PageView.builder(
+              scrollDirection: Axis.vertical,
+              controller: _pageController,
+              onPageChanged: widget.onChangeFrontItem?.call,
+              physics: const BouncingScrollPhysics(),
+              itemCount: widget.children.length,
+              itemBuilder: (context, index) {
+                return const SizedBox();
+              },
+            ),
+            //---------------------------------------
+            // On Tap Item Area
+            //---------------------------------------
+            Positioned.fill(
+              top: height - widget.itemExtent!,
+              child: GestureDetector(
+                onTap: () => widget.onTapFrontItem?.call(_currentIndex),
+              ),
+            )
           ],
         );
       },
     );
   }
+}
 
-  Widget _buildStackedCard(int index, BoxConstraints constraints) {
-    final double scrollOffset = index - _currentPage;
-    final double scale = 1 - (scrollOffset.abs() * 0.1).clamp(0.0, 0.4);
-    final double rotationAngle = (pi / 180) * (scrollOffset * 5);
+class _PerspectiveItems extends StatelessWidget {
+  const _PerspectiveItems({
+    required this.generatedItems,
+    required this.currentIndex,
+    required this.heightItem,
+    required this.pagePercent,
+    required this.children,
+  });
 
-    // Calculate opacity for fading effect
-    double opacity = 1.0;
-    if (scrollOffset >= 0 && scrollOffset < 1 && index == 0) {
-      // Current card fading out
-      opacity = 1 - scrollOffset;
-    } else if (scrollOffset < 0 && scrollOffset > -1) {
-      // Card coming into view
-      opacity = 1 + scrollOffset;
-    } else if (scrollOffset <= -1) {
-      // Cards before the incoming card
-      opacity = 0;
-    }
+  final int generatedItems;
+  final int? currentIndex;
+  final double? heightItem;
+  final double? pagePercent;
+  final List<Widget> children;
 
-    return Positioned(
-      left: constraints.maxWidth / 2,
-      bottom: -constraints.maxHeight * 0.3 + (scrollOffset * 20),
-      child: Opacity(
-        opacity: opacity.clamp(0.0, 1.0),
-        child: Transform(
-          transform: Matrix4.identity()
-            ..setEntry(3, 2, 0.001)
-            ..translate(
-              -constraints.maxWidth * 0.5 * scale,
-              -constraints.maxHeight * 0.7 * scale,
-              scrollOffset * 10,
-            )
-            ..rotateZ(rotationAngle)
-            ..scale(scale),
-          alignment: Alignment.bottomCenter,
-          child: SizedBox(
-            width: constraints.maxWidth,
-            height: constraints.maxHeight * 0.7,
-            child: widget.itemBuilder(context, index),
-          ),
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final height = constraints.maxHeight;
+        return Stack(
+          fit: StackFit.expand,
+          children: [
+            //---------------------------------
+            // Static Last Item
+            //---------------------------------
+            if (currentIndex! > (generatedItems - 1))
+              _TransformedItem(
+                heightItem: heightItem,
+                factorChange: 1,
+                endScale: .5,
+                child: children[currentIndex! - generatedItems],
+              )
+            else
+              const SizedBox(),
+            //----------------------------------
+            // Perspective Items
+            //----------------------------------
+            for (int index = 0; index < generatedItems; index++)
+              (currentIndex! > ((generatedItems - 2) - index))
+                  ? _TransformedItem(
+                      heightItem: heightItem,
+                      factorChange: pagePercent,
+                      scale: lerpDouble(0.5, 1, (index + 1) / generatedItems),
+                      translateY:
+                          (height - heightItem!) * (index + 1) / generatedItems,
+                      endScale: lerpDouble(0.5, 1, index / generatedItems),
+                      endTranslateY:
+                          (height - heightItem!) * (index / generatedItems),
+                      child: children[
+                          currentIndex! - (((generatedItems - 2) - index) + 1)],
+                    )
+                  : const SizedBox(),
+            //---------------------------------
+            // Bottom Hide Item
+            //---------------------------------
+            if (currentIndex! < (children.length - 1))
+              _TransformedItem(
+                heightItem: heightItem,
+                factorChange: pagePercent,
+                translateY: height + 20,
+                endTranslateY: height - heightItem!,
+                child: children[currentIndex! + 1],
+              )
+            else
+              const SizedBox()
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _TransformedItem extends StatelessWidget {
+  const _TransformedItem({
+    required this.heightItem,
+    required this.child,
+    required this.factorChange,
+    this.endScale = 1.0,
+    this.scale = 1.0,
+    this.endTranslateY = 0.0,
+    this.translateY = 0.0,
+  });
+
+  final Widget child;
+  final double? heightItem;
+  final double? factorChange;
+  final double? endScale;
+  final double endTranslateY;
+  final double translateY;
+  final double? scale;
+
+  @override
+  Widget build(BuildContext context) {
+    return Transform(
+      alignment: Alignment.topCenter,
+      transform: Matrix4.identity()
+        ..scale(lerpDouble(scale, endScale, factorChange!))
+        ..translate(
+          0.0,
+          lerpDouble(translateY, endTranslateY, factorChange!)!,
+        ),
+      child: Align(
+        alignment: Alignment.topCenter,
+        child: SizedBox(
+          height: heightItem,
+          width: double.infinity,
+          child: child,
         ),
       ),
     );

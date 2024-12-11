@@ -11,28 +11,33 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Material App',
       home: Scaffold(
+        backgroundColor: Colors.black,
         appBar: AppBar(
           title: const Text('Material App Bar'),
         ),
-        body: ScrollableCardStack(
-          itemCount: 10,
-          itemBuilder: (context, index) {
-            return Card(
-              elevation: 8,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16)),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color: Colors.primaries[index % Colors.primaries.length],
+        body: Expanded(
+          child: Column(
+            children: [
+              Container(height: MediaQuery.sizeOf(context).height * 0.1,color:  Colors.blue,),
+              Expanded(
+                child: PerspectiveListView(
+                  visualizedItems: 4,
+                  itemExtent: MediaQuery.sizeOf(context).height * .7,
+                  initialIndex: 7,
+                  backItemsShadowColor: Theme.of(context).scaffoldBackgroundColor,
+                  padding: const EdgeInsets.all(10),
+                  onTapFrontItem: (value) {},
+                  children: List.generate(
+                    20,
+                    (index) {
+                      final borderColor = Colors.accents[index % Colors.accents.length];
+                      return Card();
+                    },
+                  ),
                 ),
-                child: Center(
-                    child: Text('Card $index',
-                        style: const TextStyle(
-                            fontSize: 24, color: Colors.white))),
               ),
-            );
-          },
+            ],
+          ),
         ),
       ),
     );
