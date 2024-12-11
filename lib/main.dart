@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:ticket_bank_machine/scrollable_card_stack.dart';
 
@@ -9,34 +11,187 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Material App',
+      title: 'Ticket bank machine',
       home: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          title: const Text('Material App Bar'),
+          title: Text(
+            'Payments',
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          backgroundColor: Colors.transparent,
+          forceMaterialTransparency: true,
+          centerTitle: false,
+          leading: GestureDetector(
+            child: Image(
+              image: AssetImage('assets/back-icon.png'),
+            ),
+          ),
         ),
         body: Expanded(
           child: Column(
             children: [
-              Container(height: MediaQuery.sizeOf(context).height * 0.1,color:  Colors.blue,),
+              const Expanded(
+                flex: 1,
+                child: DetailsDashboard(),
+              ),
+              SizedBox(
+                height: MediaQuery.sizeOf(context).height * 0.05,
+              ),
               Expanded(
+                flex: 2,
                 child: PerspectiveListView(
                   visualizedItems: 4,
-                  itemExtent: MediaQuery.sizeOf(context).height * .7,
+                  itemExtent: MediaQuery.sizeOf(context).height * .48,
                   initialIndex: 7,
-                  backItemsShadowColor: Theme.of(context).scaffoldBackgroundColor,
-                  padding: const EdgeInsets.all(10),
+                  backItemsShadowColor:
+                      Theme.of(context).scaffoldBackgroundColor,
+                  padding: const EdgeInsets.symmetric(horizontal: 25),
                   onTapFrontItem: (value) {},
                   children: List.generate(
                     20,
                     (index) {
-                      final borderColor = Colors.accents[index % Colors.accents.length];
-                      return Card();
+                      return DecoratedBox(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black38,
+                              spreadRadius: 1,
+                              blurRadius: 20,
+                              offset: Offset(0.0,-5.0),
+                            ),
+                          ],
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                          child: Image.asset(
+                            'assets/credit-card-${index % 4}.png',
+                            fit: BoxFit.cover,
+                            alignment: Alignment.topCenter,
+                          ),
+                        ),
+                      );
                     },
                   ),
                 ),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class DetailsDashboard extends StatelessWidget {
+  const DetailsDashboard({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+                border: Border.all(width: 1, color: Colors.grey),
+                borderRadius: BorderRadius.all(Radius.circular(20.0))),
+            padding: EdgeInsets.all(12.0),
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'BLR → NGP',
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      '1 Adult',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 8.0),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Payable Amount',
+                      style: TextStyle(
+                        fontSize: 12.0,
+                      ),
+                    ),
+                    Text(
+                      '\$283',
+                      style: TextStyle(
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Spacer(),
+          Container(
+            padding: EdgeInsets.all(8.0),
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.all(
+                Radius.circular(14.0),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildPaymentOption('UPI'),
+                _buildPaymentOption('Card', isActive: true),
+                _buildPaymentOption('Net Banking'),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPaymentOption(String title, {bool isActive = false}) {
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 8.0),
+        decoration: BoxDecoration(
+            color: !isActive ? Colors.transparent : Colors.white,
+            borderRadius: BorderRadius.circular(12.0),
+            boxShadow: isActive
+                ? [
+                    BoxShadow(
+                      color: Colors.grey
+                          .withOpacity(0.5), // Color y opacidad de la sombra
+                      spreadRadius: 1, // Expansión de la sombra
+                      blurRadius: 6, // Desenfoque
+                      offset: Offset(0, 3), // Desplazamiento (x, y)
+                    ),
+                  ]
+                : null),
+        child: Center(
+          child: Text(
+            title,
+            style: TextStyle(
+                fontSize: 14.0,
+                fontWeight: FontWeight.bold,
+                color: isActive ? Colors.blue : Colors.grey),
           ),
         ),
       ),
