@@ -1,7 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:ticket_bank_machine/scrollable_card_stack.dart';
+import 'package:ticket_bank_machine/widgets/scrollable_card_stack.dart';
+import 'package:ticket_bank_machine/widgets/card_credit_ticket.dart';
 
 void main() => runApp(const MyApp());
 
@@ -47,31 +48,13 @@ class MyApp extends StatelessWidget {
                   backItemsShadowColor:
                       Theme.of(context).scaffoldBackgroundColor,
                   padding: const EdgeInsets.symmetric(horizontal: 25),
-                  onTapFrontItem: (value) {},
+                  onTapFrontItem: (value) {
+                    
+                  },
                   children: List.generate(
                     20,
                     (index) {
-                      return DecoratedBox(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black38,
-                              spreadRadius: 1,
-                              blurRadius: 20,
-                              offset: Offset(0.0,-5.0),
-                            ),
-                          ],
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                          child: Image.asset(
-                            'assets/credit-card-${index % 4}.png',
-                            fit: BoxFit.cover,
-                            alignment: Alignment.topCenter,
-                          ),
-                        ),
-                      );
+                      return CardCreditTicket(index: index);
                     },
                   ),
                 ),
@@ -92,15 +75,15 @@ class DetailsDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             decoration: BoxDecoration(
                 border: Border.all(width: 1, color: Colors.grey),
-                borderRadius: BorderRadius.all(Radius.circular(20.0))),
-            padding: EdgeInsets.all(12.0),
+                borderRadius: const BorderRadius.all(Radius.circular(20.0))),
+            padding: const EdgeInsets.all(12.0),
             child: const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -144,9 +127,9 @@ class DetailsDashboard extends StatelessWidget {
               ],
             ),
           ),
-          Spacer(),
+          const Spacer(),
           Container(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             decoration: BoxDecoration(
               color: Colors.grey[200],
               borderRadius: BorderRadius.all(
