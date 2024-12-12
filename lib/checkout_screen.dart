@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 class CheckoutScreen extends StatelessWidget {
-  const CheckoutScreen({super.key, required this.index,});
+  const CheckoutScreen({
+    super.key,
+    required this.index,
+  });
 
   final int index;
 
@@ -11,6 +14,37 @@ class CheckoutScreen extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Colors.white,
           forceMaterialTransparency: true,
+          centerTitle: true,
+          title: RichText(
+            text: const TextSpan(
+              children: [
+                WidgetSpan(
+                  alignment: PlaceholderAlignment.middle,
+                  child: Text(
+                    'Payable Amount ',
+                    style: TextStyle(
+                      fontSize: 12.0,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                WidgetSpan(
+                  child: SizedBox(width: 8), 
+                ),
+                WidgetSpan(
+                  alignment: PlaceholderAlignment.middle,
+                  child: Text(
+                    '\$283',
+                    style: TextStyle(
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
         backgroundColor: Colors.white,
         body: Padding(
@@ -28,7 +62,9 @@ class CheckoutScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Image.asset("assets/credit-card-h-${index % 4}.png"),
-                    const SizedBox(height: 12.0,),
+                    const SizedBox(
+                      height: 12.0,
+                    ),
                     Container(
                       padding: EdgeInsets.symmetric(vertical: 8.0),
                       child: Row(
@@ -51,7 +87,9 @@ class CheckoutScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 24,),
+              const SizedBox(
+                height: 24,
+              ),
               Expanded(
                 child: _numericKeyPad(),
               ),
