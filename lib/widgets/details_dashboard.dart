@@ -39,28 +39,35 @@ class DetailsDashboard extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 8.0),
-                Hero(
-                  tag: 'text-app-bar',
-                  child: Material(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Hero(
+                      tag: 'text-app-bar-1',
+                      child: Material(
+                        color: Colors.white,
+                        child: Text(
                           'Payable Amount',
                           style: TextStyle(
                             fontSize: 12.0,
                           ),
                         ),
-                        Text(
+                      ),
+                    ),
+                    Hero(
+                      tag: 'text-app-bar-2',
+                      child: Material(
+                        color: Colors.white,
+                        child: Text(
                           '\$283',
                           style: TextStyle(
                             fontSize: 24.0,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ],
             ),

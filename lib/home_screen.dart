@@ -52,7 +52,7 @@ class HomeScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     PageRouteBuilder(
-                      transitionDuration: const Duration(milliseconds: 1500),
+                      transitionDuration: const Duration(milliseconds: 1000),
                       pageBuilder: (context, animation, secondaryAnimation) =>
                           CheckoutScreen(
                         index: currentIndex ?? 0,

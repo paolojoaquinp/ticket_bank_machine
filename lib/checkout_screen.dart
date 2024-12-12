@@ -17,14 +17,15 @@ class CheckoutScreen extends StatelessWidget {
           backgroundColor: Colors.white,
           forceMaterialTransparency: true,
           centerTitle: true,
-          title: Hero(
-            tag: 'text-app-bar',
-            child: Material(
-              child: RichText(
-                text: const TextSpan(
-                  children: [
-                    WidgetSpan(
-                      alignment: PlaceholderAlignment.middle,
+          title: RichText(
+            text: const TextSpan(
+              children: [
+                WidgetSpan(
+                  alignment: PlaceholderAlignment.middle,
+                  child: Hero(
+                    tag: 'text-app-bar-1',
+                    child: Material(
+                      color: Colors.white,
                       child: Text(
                         'Payable Amount ',
                         style: TextStyle(
@@ -33,11 +34,17 @@ class CheckoutScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    WidgetSpan(
-                      child: SizedBox(width: 8),
-                    ),
-                    WidgetSpan(
-                      alignment: PlaceholderAlignment.middle,
+                  ),
+                ),
+                WidgetSpan(
+                  child: SizedBox(width: 8),
+                ),
+                WidgetSpan(
+                  alignment: PlaceholderAlignment.middle,
+                  child: Hero(
+                    tag: 'text-app-bar-2',
+                    child: Material(
+                      color: Colors.white,
                       child: Text(
                         '\$283',
                         style: TextStyle(
@@ -47,20 +54,20 @@ class CheckoutScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
         ),
         backgroundColor: Colors.white,
         body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40.0),
+          padding: const EdgeInsets.symmetric(horizontal: 30.0),
           child: Column(
             children: [
               _CreditCardDetail(
                 index: index,
-                height: MediaQuery.sizeOf(context).height * 0.3,
+                height: MediaQuery.sizeOf(context).height * 0.32,
               ),
               const SizedBox(
                 height: 24,
@@ -156,7 +163,7 @@ class _CreditCardDetail extends StatelessWidget {
                   // Detecta si el usuario arrastró hacia abajo
                   if (details.primaryVelocity != null &&
                       details.primaryVelocity! > 0) {
-                    Navigator.of(context).pop(); // Cierra la pantalla
+                    Navigator.of(context).pop();
                   }
                 },
                 child: Hero(
