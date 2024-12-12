@@ -1,3 +1,6 @@
+import 'dart:math';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:ticket_bank_machine/checkout_screen.dart';
 import 'package:ticket_bank_machine/widgets/card_credit_ticket.dart';
@@ -43,14 +46,17 @@ class HomeScreen extends StatelessWidget {
                 visualizedItems: 4,
                 itemExtent: MediaQuery.sizeOf(context).height * .48,
                 initialIndex: 7,
-                backItemsShadowColor:
-                    Theme.of(context).scaffoldBackgroundColor,
+                backItemsShadowColor: Theme.of(context).scaffoldBackgroundColor,
                 padding: const EdgeInsets.symmetric(horizontal: 25),
                 onTapFrontItem: (currentIndex) {
                   Navigator.push(
                     context,
                     PageRouteBuilder(
-                      pageBuilder: (context, animation, secondaryAnimation) => CheckoutScreen(index: currentIndex ?? 0,),
+                      transitionDuration: const Duration(milliseconds: 1500),
+                      pageBuilder: (context, animation, secondaryAnimation) =>
+                          CheckoutScreen(
+                        index: currentIndex ?? 0,
+                      ),
                       transitionsBuilder:
                           (context, animation, secondaryAnimation, child) {
                         return FadeTransition(
@@ -64,7 +70,32 @@ class HomeScreen extends StatelessWidget {
                 children: List.generate(
                   20,
                   (index) {
-                    return CardCreditTicket(index: index);
+                    return Hero(
+                      tag: 'credit-card-$index',
+                      flightShuttleBuilder: (flightContext, animation,
+                          flightDirection, fromHeroContext, toHeroContext) {
+                        Widget current;
+                        if (flightDirection == HeroFlightDirection.push) {
+                          current = toHeroContext.widget;
+                        } else {
+                          current = fromHeroContext.widget;
+                        }
+                        return AnimatedBuilder(
+                          animation: animation,
+                          builder: (context, _) {
+                            return Transform(
+                              alignment: Alignment.center,
+                              transform: Matrix4.identity()
+                                ..setEntry(3, 2, 0.001)
+                                ..scale(lerpDouble(1.5, 1.0, animation.value))
+                                ..rotateZ(lerpDouble((pi/180) * -90, (pi/180) * 0, animation.value)!),
+                              child: current,
+                            );
+                          },
+                        );
+                      },
+                      child: CardCreditTicket(index: index),
+                    );
                   },
                 ),
               ),
