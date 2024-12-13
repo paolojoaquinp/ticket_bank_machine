@@ -2,7 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:ticket_bank_machine/checkout_screen.dart';
+import 'package:ticket_bank_machine/screens/checkout_screen.dart';
 import 'package:ticket_bank_machine/widgets/card_credit_ticket.dart';
 import 'package:ticket_bank_machine/widgets/details_dashboard.dart';
 import 'package:ticket_bank_machine/widgets/scrollable_card_stack.dart';

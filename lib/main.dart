@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ticket_bank_machine/home_screen.dart';
-import 'package:ticket_bank_machine/payment_terminal_screen.dart';
+import 'package:ticket_bank_machine/screens/home_screen.dart';
+import 'package:ticket_bank_machine/screens/payment_terminal_screen/payment_terminal_screen.dart';
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
