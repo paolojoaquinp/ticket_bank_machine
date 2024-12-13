@@ -1,7 +1,9 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:ticket_bank_machine/constants.dart';
 
 class CheckoutScreen extends StatefulWidget {
   const CheckoutScreen({
@@ -16,8 +18,12 @@ class CheckoutScreen extends StatefulWidget {
 }
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
-  List<String> _cvvNumber = List.generate(3, (_) => '•');
-  List<bool> _slideAnimations = [false, false, false,];
+  List<String> _cvvNumber = List.generate(3, (_) => ' ');
+  final List<bool> _slideAnimations = [
+    false,
+    false,
+    false,
+  ];
 
   void _updateCVVNumber(String digit) {
     setState(() {
@@ -31,7 +37,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         }
       } else {
         for (int i = 0; i < _cvvNumber.length; i++) {
-          if (_cvvNumber[i] == '•') {
+          if (_cvvNumber[i] == ' ') {
             _cvvNumber[i] = digit;
             _slideAnimations[i] = !_slideAnimations[i];
             break;
@@ -101,7 +107,48 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 height: MediaQuery.sizeOf(context).height * 0.32,
                 cvvNumber: _cvvNumber,
                 slideAnimations: _slideAnimations,
+                isComplete: !_cvvNumber.contains(" "),
               ),
+              const SizedBox(
+                height: 12.0,
+              ),
+              if (!_cvvNumber.contains(" "))
+                TweenAnimationBuilder(
+                    duration: const Duration(milliseconds: 1200),
+                    tween: Tween<double>(begin: 0.0, end: 1.0),
+                    builder: (context, animation, _) {
+                      return Transform(
+                        alignment: Alignment.center,
+                        origin: Offset.zero,
+                        transform: Matrix4.identity()
+                          ..setEntry(3, 2, 0.001)
+                          ..scale(lerpDouble(0.4, 1, animation))
+                          ..translate(0.0, lerpDouble(100.0, 0.0, animation)!),
+                        child: Opacity(
+                          opacity: animation,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              elevation: 9,
+                              backgroundColor: AppColors.electricIndigo,
+                              foregroundColor: Colors.white,
+                              maximumSize: const Size(double.maxFinite, 46.0),
+                              minimumSize: const Size(double.maxFinite, 46.0),
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(12.0),
+                                ),
+                              ),
+                            ),
+                            onPressed: () {},
+                            child: const Text("Complete Payment"),
+                          ),
+                        ),
+                      );
+                    })
+              else
+                const SizedBox(
+                  height: 46,
+                ),
               const SizedBox(
                 height: 24,
               ),
@@ -120,8 +167,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         itemCount: 11,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
-          mainAxisSpacing: 15.0,
-          crossAxisSpacing: 40.0,
+          mainAxisSpacing: 12.0,
+          crossAxisSpacing: 45.0,
         ),
         itemBuilder: (context, index) {
           if (index == 9) {
@@ -145,7 +192,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           } else {
             // Botones del 1 al 9
             return InkWell(
-              onTap: () => _updateCVVNumber("${index+1}"),
+              onTap: () => _updateCVVNumber("${index + 1}"),
               child: CircleAvatar(
                 radius: 30,
                 backgroundColor: Colors.grey.shade300,
@@ -173,18 +220,22 @@ class _CreditCardDetail extends StatelessWidget {
     required this.height,
     required this.cvvNumber,
     required this.slideAnimations,
+    this.isComplete = false,
   });
 
   final int index;
   final double height;
   final List<String> cvvNumber;
   final List<bool> slideAnimations;
+  final bool isComplete;
 
   @override
   Widget build(BuildContext context) {
+    const heightButton = 46.0 + 12.0;
     return LayoutBuilder(builder: (context, constraints) {
       return Container(
         width: double.maxFinite,
+        clipBehavior: Clip.none,
         height: height,
         padding: const EdgeInsets.all(8.0),
         decoration: BoxDecoration(
@@ -196,7 +247,7 @@ class _CreditCardDetail extends StatelessWidget {
         child: Stack(
           children: [
             Positioned.fill(
-              top: -(MediaQuery.sizeOf(context).height * 0.080),
+              top: -(MediaQuery.sizeOf(context).height * 0.08),
               child: GestureDetector(
                 onVerticalDragEnd: (details) {
                   // Detecta si el usuario arrastró hacia abajo
@@ -229,6 +280,7 @@ class _CreditCardDetail extends StatelessWidget {
                     height: 12.0,
                   ),
                   Container(
+                    clipBehavior: Clip.none,
                     padding: EdgeInsets.symmetric(vertical: 8.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
