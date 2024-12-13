@@ -231,7 +231,7 @@ class _CreditCardDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const heightButton = 46.0 + 12.0;
+    // const heightButton = 46.0 + 12.0;
     return LayoutBuilder(builder: (context, constraints) {
       return Container(
         width: double.maxFinite,
