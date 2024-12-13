@@ -18,6 +18,13 @@ class PaymentTerminalInitialState extends PaymentTerminalState {
   List<Object> get props => [];
 }
 
+class PaymentTerminalInsertCardState extends PaymentTerminalState {
+  const PaymentTerminalInsertCardState();
+
+  @override
+  List<Object> get props => [];
+}
+
 class PaymentTerminalLoadingState extends PaymentTerminalState {
   const PaymentTerminalLoadingState();
 
