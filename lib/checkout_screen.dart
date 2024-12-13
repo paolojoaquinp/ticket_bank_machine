@@ -1,14 +1,45 @@
 import 'dart:math';
 
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 
-class CheckoutScreen extends StatelessWidget {
+class CheckoutScreen extends StatefulWidget {
   const CheckoutScreen({
     super.key,
     required this.index,
   });
 
   final int index;
+
+  @override
+  State<CheckoutScreen> createState() => _CheckoutScreenState();
+}
+
+class _CheckoutScreenState extends State<CheckoutScreen> {
+  List<String> _cvvNumber = List.generate(3, (_) => '•');
+  List<bool> _slideAnimations = [false, false, false,];
+
+  void _updateCVVNumber(String digit) {
+    setState(() {
+      if (digit == 'delete') {
+        for (int i = _cvvNumber.length - 1; i >= 0; i--) {
+          if (_cvvNumber[i] != '•') {
+            _cvvNumber[i] = '•';
+            _slideAnimations[i] = !_slideAnimations[i];
+            break;
+          }
+        }
+      } else {
+        for (int i = 0; i < _cvvNumber.length; i++) {
+          if (_cvvNumber[i] == '•') {
+            _cvvNumber[i] = digit;
+            _slideAnimations[i] = !_slideAnimations[i];
+            break;
+          }
+        }
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,8 +97,10 @@ class CheckoutScreen extends StatelessWidget {
           child: Column(
             children: [
               _CreditCardDetail(
-                index: index,
+                index: widget.index,
                 height: MediaQuery.sizeOf(context).height * 0.32,
+                cvvNumber: _cvvNumber,
+                slideAnimations: _slideAnimations,
               ),
               const SizedBox(
                 height: 24,
@@ -95,10 +128,11 @@ class CheckoutScreen extends StatelessWidget {
             return SizedBox.shrink();
           } else if (index == 10) {
             return InkWell(
+              onTap: () => _updateCVVNumber("0"),
               child: CircleAvatar(
                 radius: 30,
                 backgroundColor: Colors.grey.shade300,
-                child: Text(
+                child: const Text(
                   '0',
                   style: TextStyle(
                     fontSize: 34,
@@ -111,12 +145,13 @@ class CheckoutScreen extends StatelessWidget {
           } else {
             // Botones del 1 al 9
             return InkWell(
+              onTap: () => _updateCVVNumber("${index+1}"),
               child: CircleAvatar(
                 radius: 30,
                 backgroundColor: Colors.grey.shade300,
                 child: Text(
                   '${index + 1}',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 34,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
@@ -136,10 +171,14 @@ class _CreditCardDetail extends StatelessWidget {
     super.key,
     required this.index,
     required this.height,
+    required this.cvvNumber,
+    required this.slideAnimations,
   });
 
   final int index;
   final double height;
+  final List<String> cvvNumber;
+  final List<bool> slideAnimations;
 
   @override
   Widget build(BuildContext context) {
@@ -157,7 +196,7 @@ class _CreditCardDetail extends StatelessWidget {
         child: Stack(
           children: [
             Positioned.fill(
-              top: -60,
+              top: -(MediaQuery.sizeOf(context).height * 0.080),
               child: GestureDetector(
                 onVerticalDragEnd: (details) {
                   // Detecta si el usuario arrastró hacia abajo
@@ -183,7 +222,7 @@ class _CreditCardDetail extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(
+                  const Expanded(
                     child: SizedBox(),
                   ),
                   const SizedBox(
@@ -196,6 +235,7 @@ class _CreditCardDetail extends StatelessWidget {
                       children: [
                         Text('Enter a CVV Number'),
                         Container(
+                          clipBehavior: Clip.antiAlias,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.all(
                               Radius.circular(6.0),
@@ -204,6 +244,23 @@ class _CreditCardDetail extends StatelessWidget {
                           ),
                           width: 120,
                           height: 32,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: List.generate(cvvNumber.length, (index) {
+                              return SlideInDown(
+                                from: 25,
+                                animate: slideAnimations[index],
+                                child: Text(
+                                  cvvNumber[index],
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              );
+                            }),
+                          ),
                         )
                       ],
                     ),
