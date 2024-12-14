@@ -12,3 +12,10 @@ class PaymentTerminalInitialEvent extends PaymentTerminalEvent {
   @override
   List<Object> get props => [];
 }
+
+class IntroduceCreditCard extends PaymentTerminalEvent {
+  const IntroduceCreditCard();
+
+  @override
+  List<Object> get props => [];
+}
