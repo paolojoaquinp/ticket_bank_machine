@@ -23,7 +23,7 @@ class CardCreditTicket extends StatelessWidget {
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+        borderRadius: const BorderRadius.all(Radius.circular(20.0)),
         child: Image.asset(
           'assets/credit-card-${index % 4}.png',
           fit: BoxFit.cover,

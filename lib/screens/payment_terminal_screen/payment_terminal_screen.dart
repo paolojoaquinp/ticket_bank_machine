@@ -3,11 +3,7 @@ import 'dart:math';
 import 'dart:ui';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-import 'package:ticket_bank_machine/entities/ticket_bus.dart';
-import 'package:ticket_bank_machine/screens/confirmation_ticket_screen.dart';
 import 'package:ticket_bank_machine/screens/payment_terminal_screen/children/print_ticket_state.dart';
-import 'package:ticket_bank_machine/widgets/ticket_bus_details.dart';
-import 'package:ticket_bank_machine/widgets/ticket_card.dart';
 
 enum ScreenState {
   initial,
@@ -86,11 +82,13 @@ class _PaymentTerminalScreenState extends State<PaymentTerminalScreen>
   Future<void>? _otpValidation(void value) {
     _currentState = ScreenState.otpValidation;
     setState(() {});
+    return null;
   }
 
   Future<void>? _printTicket(void value) {
     _currentState = ScreenState.printTicket;
     setState(() {});
+    return null;
   }
 
   @override
@@ -120,7 +118,7 @@ class _PaymentTerminalScreenState extends State<PaymentTerminalScreen>
       case ScreenState.otpValidation:
         return _buildOTPState();
       case ScreenState.printTicket:
-        return PrintTicketState();
+        return const PrintTicketState();
     }
   }
 
@@ -300,7 +298,7 @@ class _PaymentTerminalScreenState extends State<PaymentTerminalScreen>
                       );
                     }),
               ),
-              Expanded(
+              const Expanded(
                 flex: 1,
                 child: SizedBox(),
               ),
@@ -360,7 +358,7 @@ class _PaymentTerminalScreenState extends State<PaymentTerminalScreen>
                           child: _otpAnimation.value > 0.9
                               ? Opacity(
                                   opacity: _otpAnimation.value,
-                                  child: Text('Done'))
+                                  child: const Text('Done'))
                               : Opacity(
                                   opacity: 1 - _otpAnimation.value,
                                   child: Column(
@@ -426,7 +424,7 @@ class _PaymentTerminalScreenState extends State<PaymentTerminalScreen>
                       );
                     }),
               ),
-              Expanded(
+              const Expanded(
                 flex: 1,
                 child: SizedBox(),
               ),
@@ -444,7 +442,6 @@ class _PaymentTerminalScreenState extends State<PaymentTerminalScreen>
 
 class _AtmTerminal extends StatelessWidget {
   const _AtmTerminal({
-    super.key,
     required this.leading,
   });
 

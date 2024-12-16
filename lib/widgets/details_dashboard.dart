@@ -77,7 +77,7 @@ class DetailsDashboard extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             decoration: BoxDecoration(
               color: Colors.grey[200],
-              borderRadius: BorderRadius.all(
+              borderRadius: const BorderRadius.all(
                 Radius.circular(14.0),
               ),
             ),
@@ -98,7 +98,7 @@ class DetailsDashboard extends StatelessWidget {
   Widget _buildPaymentOption(String title, {bool isActive = false}) {
     return Expanded(
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 8.0),
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
         decoration: BoxDecoration(
             color: !isActive ? Colors.transparent : Colors.white,
             borderRadius: BorderRadius.circular(12.0),
@@ -109,7 +109,7 @@ class DetailsDashboard extends StatelessWidget {
                           .withOpacity(0.5), // Color y opacidad de la sombra
                       spreadRadius: 1, // Expansión de la sombra
                       blurRadius: 6, // Desenfoque
-                      offset: Offset(0, 3), // Desplazamiento (x, y)
+                      offset: const Offset(0, 3), // Desplazamiento (x, y)
                     ),
                   ]
                 : null),

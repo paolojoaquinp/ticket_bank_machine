@@ -19,7 +19,7 @@ class CheckoutScreen extends StatefulWidget {
 }
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
-  List<String> _cvvNumber = List.generate(3, (_) => ' ');
+  final List<String> _cvvNumber = List.generate(3, (_) => ' ');
   final List<bool> _slideAnimations = [
     false,
     false,
@@ -193,7 +193,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         ),
         itemBuilder: (context, index) {
           if (index == 9) {
-            return SizedBox.shrink();
+            return const SizedBox.shrink();
           } else if (index == 10) {
             return InkWell(
               onTap: () => _updateCVVNumber("0"),
@@ -236,7 +236,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
 class _CreditCardDetail extends StatelessWidget {
   const _CreditCardDetail({
-    super.key,
     required this.index,
     required this.height,
     required this.cvvNumber,
@@ -303,15 +302,15 @@ class _CreditCardDetail extends StatelessWidget {
                   ),
                   Container(
                     clipBehavior: Clip.none,
-                    padding: EdgeInsets.symmetric(vertical: 8.0),
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Enter a CVV Number'),
+                        const Text('Enter a CVV Number'),
                         Container(
                           clipBehavior: Clip.antiAlias,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(
+                            borderRadius: const BorderRadius.all(
                               Radius.circular(6.0),
                             ),
                             color: Colors.grey[200],

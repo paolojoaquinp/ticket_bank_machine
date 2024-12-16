@@ -7,6 +7,8 @@ import 'package:ticket_bank_machine/widgets/ticket_card.dart';
 
 
 class PrintTicketState extends StatelessWidget {
+  const PrintTicketState({super.key});
+
 
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:ticket_bank_machine/entities/ticket_bus.dart';
-import 'package:ticket_bank_machine/widgets/ticket_bus_details.dart';
 
 class TicketCard extends StatelessWidget {
   const TicketCard({

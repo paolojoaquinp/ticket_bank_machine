@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ticket_bank_machine/screens/confirmation_ticket_screen.dart';
 import 'package:ticket_bank_machine/screens/home_screen.dart';
-import 'package:ticket_bank_machine/screens/payment_terminal_screen/payment_terminal_screen.dart';
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
@@ -9,7 +7,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Ticket bank machine',
       // home: ConfirmationTicketScreen(),
       // home: PaymentTerminalScreen(index: 0,),

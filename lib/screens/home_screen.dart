@@ -25,7 +25,7 @@ class HomeScreen extends StatelessWidget {
         forceMaterialTransparency: true,
         centerTitle: false,
         leading: GestureDetector(
-          child: Image(
+          child: const Image(
             image: AssetImage('assets/back-icon.png'),
           ),
         ),
