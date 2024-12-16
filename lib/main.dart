@@ -12,7 +12,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Ticket bank machine',
       // home: ConfirmationTicketScreen(),
-      home: PaymentTerminalScreen(index: 0,),
+      // home: PaymentTerminalScreen(index: 0,),
+      home: HomeScreen(),
     );
   }
 }

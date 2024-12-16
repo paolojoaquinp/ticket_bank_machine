@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'dart:ui';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
@@ -124,62 +125,93 @@ class _PaymentTerminalScreenState extends State<PaymentTerminalScreen>
   }
 
   Widget _buildInitialState() {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        Positioned.fill(
-          child: TweenAnimationBuilder(
-              tween: Tween<double>(begin: 0.0, end: 1.0),
-              curve: Curves.easeOutBack,
-              duration: const Duration(milliseconds: 1200),
-              builder: (context, animation, child) {
-                return Transform.scale(
-                  alignment: Alignment.topCenter,
-                  scale: lerpDouble(0.3, 1, animation)!,
-                  child: Opacity(
-                    opacity: lerpDouble(0.0, 0.9, animation)!,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const Expanded(
-                          flex: 1,
-                          child: _AtmTerminal(
-                            leading: Text(
-                              'Insert Card',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Container(
+          constraints: constraints,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Positioned.fill(
+                child: TweenAnimationBuilder(
+                    tween: Tween<double>(begin: 0.0, end: 1.0),
+                    curve: Curves.easeOutBack,
+                    duration: const Duration(milliseconds: 2200),
+                    builder: (context, animation, child) {
+                      return Transform.scale(
+                        alignment: Alignment.topCenter,
+                        scale: lerpDouble(0.3, 1, animation)!,
+                        child: Opacity(
+                          opacity: lerpDouble(0.0, 0.9, animation)!,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Expanded(
+                                flex: 1,
+                                child: _AtmTerminal(
+                                  leading: Text(
+                                    'Insert Card',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
+                              Expanded(
+                                flex: 1,
+                                child: Container(
+                                  alignment: Alignment.topCenter,
+                                  child: Image.asset(
+                                    'assets/bank-atm-2.png',
+                                    scale: 2,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        Expanded(
-                          flex: 1,
-                          child: Container(
-                            alignment: Alignment.topCenter,
-                            child: Image.asset(
-                              'assets/bank-atm-2.png',
-                              scale: 2,
-                            ),
-                          ),
-                        ),
-                      ],
+                      );
+                    }),
+              ),
+              Positioned.fill(
+                child: Hero(
+                  tag: 'credit-card-${widget.index}',
+                  flightShuttleBuilder: (flightContext, animation, flightDirection, fromHeroContext, toHeroContext) {
+                    Widget current;
+                    if (flightDirection == HeroFlightDirection.push) {
+                      current = toHeroContext.widget;
+                    } else {
+                      current = fromHeroContext.widget;
+                    }
+                    return AnimatedBuilder(
+                      animation: animation,
+                      builder: (context, _) {
+                        return Transform.rotate(
+                          angle: lerpDouble((pi / 180) * 90, 0, animation.value)!,
+                          child: Transform.translate(
+                            offset: Offset(0.0, lerpDouble(0.0,-(constraints.maxHeight * 0.05), animation.value)!),
+                            child: current
+                          ,),
+                        );
+                      },
+                    );
+                  },
+                  child: Transform.translate(
+                    offset: Offset(0.0, -(constraints.maxHeight * 0.05)),
+                    child: Image.asset(
+                      'assets/credit-card-${widget.index % 4}.png',
+                      alignment: Alignment.bottomCenter,
+                      scale: 1.5,
                     ),
                   ),
-                );
-              }),
-        ),
-        Positioned(
-          bottom: -(MediaQuery.sizeOf(context).height * 0.2),
-          left: 0,
-          right: 0,
-          child: Image.asset(
-            'assets/credit-card-0.png',
-            scale: 1.5,
+                ),
+              ),
+            ],
           ),
-        ),
-      ],
+        );
+      }
     );
   }
 
@@ -235,7 +267,7 @@ class _PaymentTerminalScreenState extends State<PaymentTerminalScreen>
                               lerpDouble(0.0, -220.0, _cardAnimation.value)!),
                         ),
                       child: Image.asset(
-                        'assets/credit-card-0.png',
+                        'assets/credit-card-${widget.index % 4}.png',
                         scale: 1.5,
                       ),
                     ),
@@ -406,7 +438,7 @@ class _PaymentTerminalScreenState extends State<PaymentTerminalScreen>
   }
 
   // Widget _buildPrintTicketState() {
-    
+
   // }
 }
 

@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:ticket_bank_machine/constants.dart';
+import 'package:ticket_bank_machine/screens/payment_terminal_screen/payment_terminal_screen.dart';
 
 class CheckoutScreen extends StatefulWidget {
   const CheckoutScreen({
@@ -139,7 +140,27 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                 ),
                               ),
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  transitionDuration: const Duration(milliseconds: 1500),
+                                  pageBuilder:
+                                      (context, animation, secondaryAnimation) {
+                                    return PaymentTerminalScreen(
+                                      index: widget.index,
+                                    );
+                                  },
+                                  transitionsBuilder: (context, animation,
+                                      secondaryAnimation, child) {
+                                    return FadeTransition(
+                                      opacity: animation,
+                                      child: child,
+                                    );
+                                  },
+                                ),
+                              );
+                            },
                             child: const Text("Complete Payment"),
                           ),
                         ),
@@ -232,6 +253,7 @@ class _CreditCardDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // const heightButton = 46.0 + 12.0;
+
     return LayoutBuilder(builder: (context, constraints) {
       return Container(
         width: double.maxFinite,
