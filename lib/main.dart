@@ -11,8 +11,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Ticket bank machine',
-      home: ConfirmationTicketScreen(),
-      // home: PaymentTerminalScreen(index: 0,),
+      // home: ConfirmationTicketScreen(),
+      home: PaymentTerminalScreen(index: 0,),
     );
   }
 }

@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:ticket_bank_machine/entities/ticket_bus.dart';
+import 'package:ticket_bank_machine/screens/confirmation_ticket_screen.dart';
+import 'package:ticket_bank_machine/screens/payment_terminal_screen/children/print_ticket_state.dart';
 import 'package:ticket_bank_machine/widgets/ticket_bus_details.dart';
 import 'package:ticket_bank_machine/widgets/ticket_card.dart';
 
@@ -117,7 +119,7 @@ class _PaymentTerminalScreenState extends State<PaymentTerminalScreen>
       case ScreenState.otpValidation:
         return _buildOTPState();
       case ScreenState.printTicket:
-        return _buildPrintTicketState();
+        return PrintTicketState();
     }
   }
 
@@ -403,101 +405,10 @@ class _PaymentTerminalScreenState extends State<PaymentTerminalScreen>
     );
   }
 
-  Widget _buildPrintTicketState() {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        Positioned.fill(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Expanded(
-                flex: 12,
-                child: SizedBox(),
-              ),
-              Expanded(
-                flex: 10,
-                child: Container(
-                  alignment: Alignment.topCenter,
-                  child: Transform.translate(
-                    offset: const Offset(-2, 0.0),
-                    child: Image.asset(
-                      'assets/atm-ticket-2.png',
-                      scale: 1,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Positioned(
-          top: MediaQuery.sizeOf(context).height * 0.4,
-          right: 100.0,
-          child: TweenAnimationBuilder(
-            tween: Tween<double>(begin: 0.0, end: 1.0),
-            duration: const Duration(milliseconds: 800),
-            builder: (context, animation, child) {
-              return Transform.translate(
-                offset: Offset(0.0, lerpDouble(0, 95, animation)!),
-                child: Container(
-                  color: Colors.transparent,
-                  height: MediaQuery.sizeOf(context).height * 0.13,
-                  width: MediaQuery.sizeOf(context).width * 0.14,
-                  child: TicketCard(),
-                ),
-              );
-            }
-          ),
-        ),
-        Positioned.fill(
-          top: 0,
-          bottom: 0,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                flex: 12,
-                child: LayoutBuilder(builder: (context, constraints) {
-                  return Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      Positioned.fill(
-                        child: Container(
-                          alignment: Alignment.bottomCenter,
-                          child: Image.asset(
-                            'assets/atm-ticket-1.png',
-                            scale: 1,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        bottom: (constraints.maxHeight * 0.28),
-                        left: 0,
-                        right: 0,
-                        child: const Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Text("Printing Your Ticket"),
-                        ),
-                      ),
-                    ],
-                  );
-                }),
-              ),
-              const Expanded(
-                flex: 10,
-                child: SizedBox(),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
+  // Widget _buildPrintTicketState() {
+    
+  // }
 }
-
 
 class _AtmTerminal extends StatelessWidget {
   const _AtmTerminal({
